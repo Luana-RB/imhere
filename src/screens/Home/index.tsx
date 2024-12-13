@@ -1,4 +1,10 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { styles } from "./styles";
 import { Participant } from "../../components";
 import { colors } from "../../ds";
@@ -23,13 +29,15 @@ export function HomeScreen() {
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
-      {participants.map((participant, index) => (
-        <Participant
-          key={index}
-          name={participant}
-          onRemove={() => handleParticipantRemove(participant)}
-        />
-      ))}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {participants.map((participant, index) => (
+          <Participant
+            key={index}
+            name={participant}
+            onRemove={() => handleParticipantRemove(participant)}
+          />
+        ))}
+      </ScrollView>
     </View>
   );
 }
