@@ -1,6 +1,6 @@
 import {
+  Alert,
   FlatList,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -9,12 +9,38 @@ import {
 import { styles } from "./styles";
 import { Participant } from "../../components";
 import { colors } from "../../ds";
-
-const participants = ["Luana", "Victor", "João"];
+import { useState } from "react";
 
 export function HomeScreen() {
-  function handleParticipantAdd() {}
-  function handleParticipantRemove(name: string) {}
+  const [name, setName] = useState("");
+  const [participants, setParticipants] = useState<string[]>([]);
+
+  function handleParticipantAdd() {
+    if (participants.includes(name)) {
+      return Alert.alert(
+        "Participante já existe",
+        "Já existe um participante na lista com esse nome"
+      );
+    }
+    setParticipants((prevValue) => [...prevValue, name]);
+    setName("");
+  }
+
+  function handleParticipantRemove(deleteName: string) {
+    Alert.alert("Remover", `Remover o participante ${deleteName}?`, [
+      {
+        text: "Sim",
+        onPress: () =>
+          setParticipants((prevValue) =>
+            prevValue.filter((participant) => participant !== deleteName)
+          ),
+      },
+      {
+        text: "Não",
+        style: "cancel",
+      },
+    ]);
+  }
 
   return (
     <View style={styles.container}>
@@ -25,8 +51,13 @@ export function HomeScreen() {
           style={styles.input}
           placeholder="Nome do participante"
           placeholderTextColor={colors.subtitle200}
+          onChangeText={(text) => setName(text)}
+          value={name}
         />
-        <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleParticipantAdd()}
+        >
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
