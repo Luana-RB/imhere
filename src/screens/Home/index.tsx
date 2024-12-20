@@ -7,32 +7,26 @@ import {
   View,
 } from "react-native";
 import { styles } from "./styles";
-import { Participant } from "../../components";
+import { Task } from "../../components";
 import { colors } from "../../ds";
 import { useState } from "react";
 
 export function HomeScreen() {
-  const [name, setName] = useState("");
-  const [participants, setParticipants] = useState<string[]>([]);
+  const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState<string[]>([]);
 
-  function handleParticipantAdd() {
-    if (participants.includes(name)) {
-      return Alert.alert(
-        "Participante já existe",
-        "Já existe um participante na lista com esse nome"
-      );
-    }
-    setParticipants((prevValue) => [...prevValue, name]);
-    setName("");
+  function handleTaskAdd() {
+    setTasks((prevValue) => [...prevValue, task]);
+    setTask("");
   }
 
-  function handleParticipantRemove(deleteName: string) {
-    Alert.alert("Remover", `Remover o participante ${deleteName}?`, [
+  function handleTaskRemove(deleteTask: string) {
+    Alert.alert("Remover", `Remover tarefa ${deleteTask}?`, [
       {
         text: "Sim",
         onPress: () =>
-          setParticipants((prevValue) =>
-            prevValue.filter((participant) => participant !== deleteName)
+          setTasks((prevValue) =>
+            prevValue.filter((task) => task !== deleteTask)
           ),
       },
       {
@@ -44,35 +38,29 @@ export function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.eventTitle}>Nome do evento</Text>
-      <Text style={styles.eventDate}>Sexta, 4 de Novembro de 2024.</Text>
+      <Text style={styles.eventTitle}>Tarefas</Text>
+      <Text style={styles.eventDate}>Adicione suas tarefas</Text>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Nome do participante"
+          placeholder="Digite a tarefa"
           placeholderTextColor={colors.subtitle200}
-          onChangeText={(text) => setName(text)}
-          value={name}
+          onChangeText={(text) => setTask(text)}
+          value={task}
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => handleParticipantAdd()}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => handleTaskAdd()}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
       <FlatList
-        data={participants}
+        data={tasks}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
-          <Participant
-            name={item}
-            onRemove={() => handleParticipantRemove(item)}
-          />
+          <Task name={item} onRemove={() => handleTaskRemove(item)} />
         )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
-          <Text style={styles.textBasic}>Não há nenhum participante ainda</Text>
+          <Text style={styles.textBasic}>Não há nenhuma tarefa ainda</Text>
         )}
       />
     </View>
